@@ -1,2 +1,2 @@
 # Spooky-Searching
-CS214 Assignment 3
+CS214 Assignment 2
