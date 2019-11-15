@@ -14,9 +14,19 @@ int* shuffle(int* arr, int i){
 
 }
 
+int check(int* arr, int target, int size){
+    int i = 0;
+    for(i = 0; i<size; i++){
+        if(arr[i] == target){
+        return i;
+        }
+    }
+    return -1;
+
+}
 int main(int argc, char* argv[]){
 
-    int num = 40;
+    int num = 500;
     //FIRST GENERATION OF RANDOM LIST
     int* array = malloc(num * sizeof(int));
     int i = 0;
@@ -39,9 +49,11 @@ int main(int argc, char* argv[]){
     }
     printf("\n");
     //SEARCH USING PROCESSES/THREADS
-    int x = search(array, 35, num);
+    int x = search(array, 789, num);
     printf("Found it at %d\n", x);
     ////////////////////////////
+    int actual = check(array, 789, num);
+    printf("Actually at %d\n", actual);
 
     //EVERY TEST AFTERWARDS DOESN'T NEED TO GENERATE THE WHOLE LIST FROM SCRATCH, JUST SHUFFLE
     int found = 5;
