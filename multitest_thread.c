@@ -6,17 +6,18 @@
 int* mainArray;
 int target;
 
-struct thread_arg{
-    int start;
-    int end;
-    int ind;
-    int target;
-};
+/*
+    given array meta:  
+    meta[0] = start index of array
+    meta[1] = end index of array
+    meta[2] = index of target (if found)
+
+*/
 
 //Function to search
 void* ThreadSearch(void* arg){
     printf("target: %d\n", target);
-    //struct thread_arg* ptr = (struct thread_arg*)arg;
+    
     int* ptr = (int*)arg;
     int start = ptr[0];
     int end = ptr[1];
@@ -30,9 +31,7 @@ void* ThreadSearch(void* arg){
             f = 1;
         }
     }
-    //if(f == 0){
-     //   ptr->ind = 251;
-    //}
+    
     printf("ind is: %d\n", ptr[2]);
     pthread_exit(&arg);
 }
@@ -61,13 +60,9 @@ int divideUpWork(int* arr, int targ, int num){
     for(i = 0; i < num; i+= piece, k++){
         pthread_t handler;
 
-        struct thread_arg* arg = malloc(sizeof(struct thread_arg));
-        arg->start = i;
-        arg->end = i+piece;
-        arg->target = targ;
         int* meta = (int*)malloc(sizeof(int)*3);
         meta[0] = i; meta[1] = i + piece; meta[2] = -1;
-        printf("arg start at: %d\n", arg->start);
+        printf("arg start at: %d\n", meta[0]);
         int status = pthread_create(&handler, NULL, ThreadSearch, (void*)meta);
         if(status != 0){
             printf("error occurred while threading\n");
@@ -79,14 +74,15 @@ int divideUpWork(int* arr, int targ, int num){
     printf("numThreads: %d threadCount: %d\n", numThreads, threadCount);
     int found = 251;
     for(i = 0; i < numThreads; i++){
-        struct thread_arg* ptr;
-        pthread_join(thread[i], (void*)&ptr);
+        
+        int* meta = (int*) malloc(sizeof(int)*3);
+        pthread_join(thread[i], (void*)meta);
         printf("joined thread: %d\n", i);
-        //struct thread_arg* ptr = (struct thread_arg*)arg;
-        int x = ptr->ind;
+       
+        int x = meta[2];
         printf("x is: %d\n", x);
-        if(ptr->ind != 251){
-            found = ptr->ind;
+        if(meta[2] != 251){
+            found = meta[2];
             found = (i*piece) + found;
         }
     }
