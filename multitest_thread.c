@@ -2,6 +2,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 int* mainArray;
 int target;
@@ -22,13 +23,12 @@ void* ThreadSearch(void* arg){
     int start = ptr[0];
     int end = ptr[1];
     printf("start: %d, end: %d\n", start, end);
-    int f = 0;
-    int i = 0;
+    int i;
     for(i = start; i<end; i++){
         if(mainArray[i] == target){
             ptr[2] = i;
             printf("true\n");
-            f = 1;
+
         }
     }
 
@@ -78,15 +78,14 @@ int divideUpWork(int* arr, int targ, int num){
         int ans;
         pthread_join(thread[i], (void*)&ans);
         printf("joined thread: %d\n", i);
-
         printf("x is: %d\n", ans);
+
         if(ans != -1){
             found = ans;
         }
     }
 
     return found;
-
 
 
 }
