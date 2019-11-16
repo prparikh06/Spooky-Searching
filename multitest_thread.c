@@ -78,7 +78,7 @@ int divideUpWork(int* arr, int targ, int num){
         int* meta = (int*) malloc(sizeof(int)*3);
         pthread_join(thread[i], (void*)meta);
         printf("joined thread: %d\n", i);
-	int x = meta[2]; 
+	    int x = meta[2]; 
         printf("x is: %d\n", x);
         if(x != 251){
             found = x;
