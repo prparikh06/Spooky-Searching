@@ -26,7 +26,7 @@ int check(int* arr, int target, int size){
 }
 int main(int argc, char* argv[]){
 
-    int num = 500;
+    int num = 50;
     //FIRST GENERATION OF RANDOM LIST
     int* array = malloc(num * sizeof(int));
     int i = 0;
@@ -49,10 +49,10 @@ int main(int argc, char* argv[]){
     }
     printf("\n");
     //SEARCH USING PROCESSES/THREADS
-    int x = search(array, 253, num);
+    int x = search(array, 13, num);
     printf("Found it at %d\n", x);
     ////////////////////////////
-    int actual = check(array, 253, num);
+    int actual = check(array, 13, num);
     printf("Actually at %d\n", actual);
 
     //EVERY TEST AFTERWARDS DOESN'T NEED TO GENERATE THE WHOLE LIST FROM SCRATCH, JUST SHUFFLE
