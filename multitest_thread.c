@@ -7,7 +7,7 @@ int* mainArray;
 int target;
 
 /*
-    given array meta:  
+    given array meta:
     meta[0] = start index of array
     meta[1] = end index of array
     meta[2] = index of target (if found)
@@ -17,7 +17,7 @@ int target;
 //Function to search
 void* ThreadSearch(void* arg){
     printf("target: %d\n", target);
-    
+
     int* ptr = (int*)arg;
     int start = ptr[0];
     int end = ptr[1];
@@ -31,9 +31,10 @@ void* ThreadSearch(void* arg){
             f = 1;
         }
     }
-    
+
     printf("ind is: %d\n", ptr[2]);
-    pthread_exit(&arg);
+    //pthread_exit(&arg);
+    pthread_exit((void*)ptr[2]);
 }
 int divideUpWork(int* arr, int targ, int num){
     mainArray = arr;
@@ -72,21 +73,18 @@ int divideUpWork(int* arr, int targ, int num){
         threadCount++;
     }
     printf("numThreads: %d threadCount: %d\n", numThreads, threadCount);
-    int found = 251;
+    int found = -1;
     for(i = 0; i < numThreads; i++){
-        
-        int* meta = (int*) malloc(sizeof(int)*3);
-        pthread_join(thread[i], (void*)meta);
+        int ans;
+        pthread_join(thread[i], (void*)&ans);
         printf("joined thread: %d\n", i);
-       
-        int x = meta[2];
-        printf("x is: %d\n", x);
-        if(meta[2] != 251){
-            found = meta[2];
-            found = (i*piece) + found;
+
+        printf("x is: %d\n", ans);
+        if(ans != -1){
+            found = ans;
         }
     }
-    pthread_exit(NULL);
+
     return found;
 
 
