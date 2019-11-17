@@ -44,7 +44,7 @@ int main(int argc, char* argv[]){
     }
     
     //SEARCH USING PROCESSES/THREADS
-    	int randomTarget = rand() % num;
+    int randomTarget = rand() % num;
 	int x = search(array, randomTarget, num);
     printf("Found it at %d\n", x);
     ////////////////////////////
