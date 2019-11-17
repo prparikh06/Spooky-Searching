@@ -5,13 +5,19 @@
 #include <errno.h>
 #include <math.h>
 
-int divideUpWork(int* arr, int target, int num){
+int divideUpWork(int* arr, int target, int num, int numElem){
 
     int piece = 0; // # of nums in each section
     int numProcs = 0; // num of child procs based on piece
     int numChild = 0; // keeps count of number of child
+
+    // Testing phase param not -1
+    if(numElem != -1){
+        piece = numElem;
+        numProcs = ceil(num/piece);
+    }
     // If array size is less than 250, we just divide it in 4 sections
-    if(num < 250){
+    else if(num < 250){
         piece = ceil(num / 4);
         numProcs = 4;
     }else{
@@ -19,7 +25,7 @@ int divideUpWork(int* arr, int target, int num){
         numProcs = ceil(num/250); //need to round up
     }
     //printf("size of array: %d\n", num);
-    //printf("piece: %d, numProcs: %d\n", piece, numProcs);
+    printf("piece: %d, numProcs: %d\n", piece, numProcs);
     pid_t pidChild[numProcs]; // retain's the children's pid
     int k = 0;
 

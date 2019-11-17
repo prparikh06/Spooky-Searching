@@ -38,15 +38,21 @@ void* ThreadSearch(void* arg){
     //pthread_exit(&arg);
     pthread_exit((void*) ans);
 }
-int divideUpWork(int* arr, int targ, int num){
+int divideUpWork(int* arr, int targ, int num, int numElem){
     mainArray = arr;
     target = targ;
     //printf("target: %d\n", target);
     int piece = 0; // # of nums in each section
     int numThreads = 0; // num of threads based on piece
     int threadCount = 0; // keeps count of number of threads
+
+    // Testing phase param not -1
+    if(numElem != -1){
+        piece = numElem;
+        numThreads = ceil(num/piece);
+    }
     // If array size is less than 250, we just divide it in 4 sections
-    if(num < 250){
+    else if(num < 250){
         piece = ceil(num / 4);
         numThreads = 4;
     }else{
@@ -54,7 +60,7 @@ int divideUpWork(int* arr, int targ, int num){
         numThreads = ceil(num/250); //need to round up
     }
     //printf("size of array: %d\n", num);
-    //printf("piece: %d, numProcs: %d\n", piece, numProcs);
+    printf("piece: %d, numThreads: %d\n", piece, numThreads);
     //printf("numThreads: %d threadCount: %d\n", numThreads, threadCount);
 
     pthread_t thread[numThreads];

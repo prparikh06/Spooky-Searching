@@ -42,10 +42,10 @@ int main(int argc, char* argv[]){
         array[randInd] = array[i];
         array[i] = temp;
     }
-    
+
     //SEARCH USING PROCESSES/THREADS
     int randomTarget = rand() % num;
-	int x = search(array, randomTarget, num);
+	int x = search(array, randomTarget, num, 10);
     printf("Found it at %d\n", x);
     ////////////////////////////
     int actual = check(array, randomTarget, num);

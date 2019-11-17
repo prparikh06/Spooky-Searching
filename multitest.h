@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define search( arr, x, num ) divideUpWork( arr, x, num )
+#define search( arr, x, num, numElem ) divideUpWork( arr, x, num, numElem )
 
-int divideUpWork(int* arr, int target, int num);
+int divideUpWork(int* arr, int target, int num, int numElem);
 
 #endif
