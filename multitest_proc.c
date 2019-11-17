@@ -18,8 +18,8 @@ int divideUpWork(int* arr, int target, int num){
         piece = 250;
         numProcs = ceil(num/250); //need to round up
     }
-    printf("size of array: %d\n", num);
-    printf("piece: %d, numProcs: %d\n", piece, numProcs);
+    //printf("size of array: %d\n", num);
+    //printf("piece: %d, numProcs: %d\n", piece, numProcs);
     pid_t pidChild[numProcs]; // retain's the children's pid
     int k = 0;
 
@@ -27,13 +27,13 @@ int divideUpWork(int* arr, int target, int num){
     int i = 0;
     for(i = 0; i < num; i = i + piece, k++){
         int start = i; //FLAG: for child to know where to start searching in arr
-        printf("iteration i: %d\n", i);
+        //printf("iteration i: %d\n", i);
         //pid_t pid = fork();
 
         if((pidChild[k] = fork()) == -1){
-            printf("Error while fork the %d child : errno = '%s'.\n", k, strerror(errno));
+            //printf("Error while fork the %d child : errno = '%s'.\n", k, strerror(errno));
         }else if(pidChild[k] == 0){
-            printf("I am child %d\n", getpid());
+            //printf("I am child %d\n", getpid());
             //search for target
             int j;
             int ind = 0;
@@ -46,15 +46,15 @@ int divideUpWork(int* arr, int target, int num){
             }
             exit(251);
         }else{
-            printf("I am parent, my child is %d, I am %d\n", pidChild[k], getpid());
+            //printf("I am parent, my child is %d, I am %d\n", pidChild[k], getpid());
             numChild++;
         }
 
     }
 
-     printf("Waiting on all child.\n");
+     //printf("Waiting on all child.\n");
      int found = -1;
-     printf("numchild: %d, numProcs: %d\n", numChild, numProcs);
+     //printf("numchild: %d, numProcs: %d\n", numChild, numProcs);
      pid_t stoppedChild;
      //Waits until all children are collected
      while(numChild >=0){
@@ -67,11 +67,11 @@ int divideUpWork(int* arr, int target, int num){
                 //check if child returned without error
                 if(WIFEXITED((status))){
                     int exit_status = WEXITSTATUS(status); //Get's return value
-                    printf("Child %d stopped.\n", i);
-                    printf("the status: %d\n", exit_status);
+                    //printf("Child %d stopped.\n", i);
+                    //printf("the status: %d\n", exit_status);
                     if(exit_status < 250 && exit_status >= 0){ //Child found the target
                         found = (i*piece) + exit_status;
-                        printf("the found: %d\n", found);
+                        //printf("the found: %d\n", found);
                     }
 
                 }

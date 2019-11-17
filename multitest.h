@@ -1,6 +1,7 @@
 #ifndef _multitest_h_
 #define _multitest_h_
 
+#include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 
