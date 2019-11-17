@@ -28,14 +28,12 @@ void* ThreadSearch(void* arg){
         if(mainArray[i] == target){
             ptr[2] = i;
             printf("true\n");
-
         }
     }
 
     printf("ind is: %d\n", ptr[2]);
     int ans = ptr[2];
     free(arg);
-    //pthread_exit(&arg);
     pthread_exit((void*)ans);
 }
 int divideUpWork(int* arr, int targ, int num){
