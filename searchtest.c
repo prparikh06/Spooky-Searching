@@ -26,46 +26,42 @@ int check(int* arr, int target, int size){
 }
 int main(int argc, char* argv[]){
 
-    int num = 50;
+    int num = atoi(argv[1]);
+
     //FIRST GENERATION OF RANDOM LIST
     int* array = malloc(num * sizeof(int));
     int i = 0;
     for(i = 0; i < num; i++){
         array[i] = i;
     }
-    for(i = 0; i < num; i++){
-        printf("%d ", array[i]);
-    }
-
+    //SCRAMBLE ARRAY
     for(i = 0; i < num; i++){
         int randInd = rand() % num;
+
         int temp = array[randInd];
         array[randInd] = array[i];
         array[i] = temp;
     }
-    printf("\n");
-    for(i = 0; i < num; i++){
-        printf("%d ", array[i]);
-    }
-    printf("\n");
+    
     //SEARCH USING PROCESSES/THREADS
-    int x = search(array, 13, num);
+    	int randomTarget = rand() % num;
+	int x = search(array, randomTarget, num);
     printf("Found it at %d\n", x);
     ////////////////////////////
-    int actual = check(array, 13, num);
+    int actual = check(array, randomTarget, num);
     printf("Actually at %d\n", actual);
-
+/*
     //EVERY TEST AFTERWARDS DOESN'T NEED TO GENERATE THE WHOLE LIST FROM SCRATCH, JUST SHUFFLE
     int found = 5;
     array = shuffle(array, found);
-    printf("\n");
+    //printf("\n");
     for(i = 0; i < num; i++){
-        printf("%d ", array[i]);
+        //printf("%d ", array[i]);
     }
 
     //OTHER TESTS
 
-
+*/
 
     return(0);
 

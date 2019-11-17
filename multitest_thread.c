@@ -17,31 +17,31 @@ int target;
 
 //Function to search
 void* ThreadSearch(void* arg){
-    printf("target: %d\n", target);
+    //printf("target: %d\n", target);
 
     int* ptr = (int*)arg;
     int start = ptr[0];
     int end = ptr[1];
-    printf("start: %d, end: %d\n", start, end);
+    //printf("start: %d, end: %d\n", start, end);
     int i;
     for(i = start; i<end; i++){
         if(mainArray[i] == target){
             ptr[2] = i;
-            printf("true\n");
+            //printf("true\n");
 
         }
     }
 
-    printf("ind is: %d\n", ptr[2]);
-    int ans = ptr[2];
+    //printf("ind is: %d\n", ptr[2]);
+    int* ans = (int*) ptr[2];
     free(arg);
     //pthread_exit(&arg);
-    pthread_exit((void*)ans);
+    pthread_exit((void*) ans);
 }
 int divideUpWork(int* arr, int targ, int num){
     mainArray = arr;
     target = targ;
-    printf("target: %d\n", target);
+    //printf("target: %d\n", target);
     int piece = 0; // # of nums in each section
     int numThreads = 0; // num of threads based on piece
     int threadCount = 0; // keeps count of number of threads
@@ -53,9 +53,9 @@ int divideUpWork(int* arr, int targ, int num){
         piece = 250;
         numThreads = ceil(num/250); //need to round up
     }
-    printf("size of array: %d\n", num);
+    //printf("size of array: %d\n", num);
     //printf("piece: %d, numProcs: %d\n", piece, numProcs);
-    printf("numThreads: %d threadCount: %d\n", numThreads, threadCount);
+    //printf("numThreads: %d threadCount: %d\n", numThreads, threadCount);
 
     pthread_t thread[numThreads];
     int k = 0;
@@ -65,22 +65,22 @@ int divideUpWork(int* arr, int targ, int num){
 
         int* meta = (int*)malloc(sizeof(int)*3);
         meta[0] = i; meta[1] = i + piece; meta[2] = -1;
-        printf("arg start at: %d\n", meta[0]);
+        //printf("arg start at: %d\n", meta[0]);
         int status = pthread_create(&handler, NULL, ThreadSearch, (void*)meta);
         if(status != 0){
-            printf("error occurred while threading\n");
+            //printf("error occurred while threading\n");
         }
         thread[k] = handler;
-        printf("handler: %d\n", handler);
+        //printf("handler: %d\n", handler);
         threadCount++;
     }
-    printf("numThreads: %d threadCount: %d\n", numThreads, threadCount);
+    //printf("numThreads: %d threadCount: %d\n", numThreads, threadCount);
     int found = -1;
     for(i = 0; i < numThreads; i++){
         int ans;
         pthread_join(thread[i], (void*)&ans);
-        printf("joined thread: %d\n", i);
-        printf("x is: %d\n", ans);
+        //printf("joined thread: %d\n", i);
+        //printf("x is: %d\n", ans);
 
         if(ans != -1){
             found = ans;
