@@ -5,24 +5,24 @@
 #include <sys/time.h>
 
 
-int MAX_ARR_SIZE = 25000;
+int MAX_ARR_SIZE = 12500;
 int MAX_WORKERS = 50;
 
 
 writeTimeToFile(FILE *fp){
 
 	struct timeval startTime, endTime;
-	float runTime = 0;
+	
 		
 	int counter = 0;
 	int i,ind,j;
 	//create an array from size 1 to 375,000
-	for (i = 1; i <= MAX_ARR_SIZE; i++){
+	for (i = 1; i <=2000; i++){
 		int* array = malloc(i * sizeof(int));
 		//make the array
 		for(ind = 0; ind < i; ind++)
 	        	array[ind] = ind;
-    	//shuffle the array
+    		//shuffle the array
    		for(ind = 0; ind < i; ind++){
 			int rand1 = rand() % i;
 			int rand2 = rand() % i;
@@ -34,18 +34,21 @@ writeTimeToFile(FILE *fp){
 	
 		//random target:
 		int randomTarget = rand() % i;
-
-		//given our array of size i, test using 1-50 threads/processes
-		for (j = ceil((double) i / 250); j <= MAX_WORKERS, i % j == 0; j++){
-			//if num workers > array size, break inner loop
-			if (j > i) break;
+		
+		//given our array of size i, test using up to 50 threads/processes
+		for (j = ceil((double) i / 250); j <= MAX_WORKERS, j <= i; j++){
+				
+			if (i % MAX_WORKERS != 0) continue;
 			gettimeofday(&startTime,NULL);
-			search(array, randomTarget, i, j);
+			int x = search(array, randomTarget, i, j);
 			gettimeofday(&endTime,NULL);
 			float runTime = endTime.tv_usec - startTime.tv_usec + endTime.tv_sec - startTime.tv_sec;
+			char* status;
+			if (x != -1) status = "found";
+			else status = "not found";
 			//write results to the file
-			fprintf(fp, "%d\t%d\t%f\n", i,j,runTime); 		
-			printf("iteration: %d\n",counter++);
+			fprintf(fp, "%d\t%d\t%f\t%s\n", i,j,runTime,status); 		
+			//printf("iteration: %d\n",counter++);
 		}
 		free(array);
 
