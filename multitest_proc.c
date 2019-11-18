@@ -25,7 +25,7 @@ int divideUpWork(int* arr, int target, int num, int numElem){
         numProcs = ceil(num/250); //need to round up
     }
     //printf("size of array: %d\n", num);
-    printf("piece: %d, numProcs: %d\n", piece, numProcs);
+    //printf("piece: %d, numProcs: %d\n", piece, numProcs);
     pid_t pidChild[numProcs]; // retain's the children's pid
     int k = 0;
 

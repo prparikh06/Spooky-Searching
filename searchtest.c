@@ -27,29 +27,38 @@ int check(int* arr, int target, int size){
 int main(int argc, char* argv[]){
 
     int num = atoi(argv[1]);
-
+	int numWorkers = -1;
+	if (argv[2] != NULL) numWorkers = atoi(argv[2]);
+	
     //FIRST GENERATION OF RANDOM LIST
     int* array = malloc(num * sizeof(int));
-    int i = 0;
+    int i;
     for(i = 0; i < num; i++){
         array[i] = i;
+	//printf("%d ",array[i]);
     }
-    //SCRAMBLE ARRAY
+
+printf("\n");
+  //SCRAMBLE ARRAY
+  
     for(i = 0; i < num; i++){
-        int randInd = rand() % num;
-
-        int temp = array[randInd];
-        array[randInd] = array[i];
-        array[i] = temp;
+	int rand1 = rand() % num;
+	int rand2 = rand() % num;
+	int tmp1 = array[rand1];
+	int tmp2 = array[rand2];
+	array[rand2] = tmp1;
+	array[rand1] = tmp2;
     }
 
+	for (i = 0; i < num; i++) printf("%d ",array[i]);
     //SEARCH USING PROCESSES/THREADS
     int randomTarget = rand() % num;
-	int x = search(array, randomTarget, num, 10);
-    printf("Found it at %d\n", x);
+	int x = search(array, randomTarget, num, numWorkers);
+    printf("\nsearching: %d\nFound it at %d\n", randomTarget,x);
     ////////////////////////////
     int actual = check(array, randomTarget, num);
     printf("Actually at %d\n", actual);
+	free(array);
 /*
     //EVERY TEST AFTERWARDS DOESN'T NEED TO GENERATE THE WHOLE LIST FROM SCRATCH, JUST SHUFFLE
     int found = 5;
