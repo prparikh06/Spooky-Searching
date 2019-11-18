@@ -5,8 +5,8 @@
 #include <sys/time.h>
 
 
-int MAX_ARR_SIZE = 375000;
-int MAX_WORKERS = 1500;
+int MAX_ARR_SIZE = 25000;
+int MAX_WORKERS = 50;
 
 
 writeTimeToFile(FILE *fp){
@@ -19,10 +19,10 @@ writeTimeToFile(FILE *fp){
 	//create an array from size 1 to 375,000
 	for (i = 1; i <= MAX_ARR_SIZE; i++){
 		int* array = malloc(i * sizeof(int));
-
+		//make the array
 		for(ind = 0; ind < i; ind++)
 	        	array[ind] = ind;
-    		   
+    	//shuffle the array
    		for(ind = 0; ind < i; ind++){
 			int rand1 = rand() % i;
 			int rand2 = rand() % i;
@@ -34,8 +34,11 @@ writeTimeToFile(FILE *fp){
 	
 		//random target:
 		int randomTarget = rand() % i;
-		//given our array of size i, test using 1-1500 threads/processes
-		for (j = 1; j <= MAX_WORKERS; j++){
+
+		//given our array of size i, test using 1-50 threads/processes
+		for (j = ceil((double) i / 250); j <= MAX_WORKERS, i % j == 0; j++){
+			//if num workers > array size, break inner loop
+			if (j > i) break;
 			gettimeofday(&startTime,NULL);
 			search(array, randomTarget, i, j);
 			gettimeofday(&endTime,NULL);

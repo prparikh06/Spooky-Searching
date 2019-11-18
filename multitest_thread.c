@@ -51,10 +51,7 @@ int divideUpWork(int* arr, int targ, int num, int numElem){
         numThreads = numElem;
 	//printf("ceil(num/numElem) should be: %d\n", ceil(num/numElem));
         piece = ceil((double)num/numElem);
-	if (piece > 250){ //this is an issue
-		piece = 250; 
-
-	}
+	
     }
     // If array size is less than 250, we just divide it in 4 sections
     else if(numElem == -1 && num < 250){

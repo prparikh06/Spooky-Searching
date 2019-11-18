@@ -15,7 +15,7 @@ int divideUpWork(int* arr, int target, int num, int numElem){
     if(numElem != -1){
         numProcs = numElem;
         piece = ceil((double)num/numElem);
-	if (piece > 250) piece = 250;
+	
     }
     // If array size is less than 250, we just divide it in 4 sections
     else if(num < 250){
