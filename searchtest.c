@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "multitest.h"
+#include <unistd.h>
+#include <sys/time.h>
 
 int* shuffle(int* arr, int i){
     size_t num = sizeof(arr)/sizeof(arr[0]);
@@ -8,7 +10,6 @@ int* shuffle(int* arr, int i){
     int temp = arr[randInd];
     arr[randInd] = arr[i];
     arr[i] = temp;
-
 
     return arr;
 
@@ -38,7 +39,6 @@ int main(int argc, char* argv[]){
 	//printf("%d ",array[i]);
     }
 
-printf("\n");
   //SCRAMBLE ARRAY
   
     for(i = 0; i < num; i++){
@@ -50,11 +50,20 @@ printf("\n");
 	array[rand1] = tmp2;
     }
 
-	for (i = 0; i < num; i++) printf("%d ",array[i]);
+	//for (i = 0; i < num; i++) printf("%d ",array[i]);
     //SEARCH USING PROCESSES/THREADS
     int randomTarget = rand() % num;
+	
+	//START TIMING
+	struct timeval startTime, endTime;
+	float runTime = 0;
+	gettimeofday(&startTime,NULL);
+
 	int x = search(array, randomTarget, num, numWorkers);
-    printf("\nsearching: %d\nFound it at %d\n", randomTarget,x);
+	gettimeofday(&endTime, NULL);
+	runTime = (float) (endTime.tv_usec - startTime.tv_usec + endTime.tv_sec - startTime.tv_sec);
+	printf("Runtime %f\n", runTime);
+    printf("searching: %d\nFound it at %d\n", randomTarget,x);
     ////////////////////////////
     int actual = check(array, randomTarget, num);
     printf("Actually at %d\n", actual);

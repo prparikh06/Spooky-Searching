@@ -13,16 +13,16 @@ int divideUpWork(int* arr, int target, int num, int numElem){
 
     // Testing phase param not -1
     if(numElem != -1){
-        piece = numElem;
-        numProcs = ceil(num/piece);
+        numProcs = numElem;
+        piece = ceil((double)num/numElem);
     }
     // If array size is less than 250, we just divide it in 4 sections
     else if(num < 250){
-        piece = ceil(num / 4);
+        piece = ceil((double) num / 4);
         numProcs = 4;
     }else{
         piece = 250;
-        numProcs = ceil(num/250); //need to round up
+        numProcs = ceil((double)num/250); //need to round up
     }
     //printf("size of array: %d\n", num);
     //printf("piece: %d, numProcs: %d\n", piece, numProcs);
@@ -30,7 +30,7 @@ int divideUpWork(int* arr, int target, int num, int numElem){
     int k = 0;
 
     //TIME TO FORK
-    int i = 0;
+    int i;
     for(i = 0; i < num; i = i + piece, k++){
         int start = i; //FLAG: for child to know where to start searching in arr
         //printf("iteration i: %d\n", i);
