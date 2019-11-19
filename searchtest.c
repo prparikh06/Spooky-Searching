@@ -12,12 +12,12 @@ int MAX_WORKERS = 50;
 writeTimeToFile(FILE *fp){
 
 	struct timeval startTime, endTime;
-	
-		
+
+
 	int counter = 0;
 	int i,ind,j;
 	//create an array from size 1 to 375,000
-	for (i = 50; i <=2000; i+=50){
+	for (i = 1; i <=2000; i++){
 		int* array = malloc(i * sizeof(int));
 		//make the array
 		for(ind = 0; ind < i; ind++)
@@ -31,13 +31,13 @@ writeTimeToFile(FILE *fp){
 			array[rand2] = tmp1;
 			array[rand1] = tmp2;
 		}
-	
+
 		//random target:
 		int randomTarget = rand() % i;
-		
+
 		//given our array of size i, test using up to 50 threads/processes
 		for (j = ceil((double) i / 250); j <= MAX_WORKERS && j <= i; j++){
-				
+
 			if (i % MAX_WORKERS != 0) continue;
 			gettimeofday(&startTime,NULL);
 			int x = search(array, randomTarget, i, j);
@@ -47,7 +47,7 @@ writeTimeToFile(FILE *fp){
 			if (x != -1) status = "found";
 			else status = "not found";
 			//write results to the file
-			fprintf(fp, "%d\t%d\t%f\t%s\n", i,j,runTime,status); 		
+			fprintf(fp, "%d\t%d\t%f\t%s\n", i,j,runTime,status);
 			printf("arary size and thread num: %d and %d\n",i,j);
 		}
 		free(array);
@@ -79,17 +79,17 @@ int check(int* arr, int target, int size){
 
 }
 int main(int argc, char* argv[]){
-	
+
 	FILE *fp = fopen(argv[1],"w");
 	writeTimeToFile(fp);
 
-	
+
 
 	/*
 	int num = atoi(argv[1]);
 	int numWorkers = -1;
 	if (argv[2] != NULL) numWorkers = atoi(argv[2]);
-		
+
 
     //FIRST GENERATION OF RANDOM LIST
     int* array = malloc(num * sizeof(int));
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]){
     }
 
   //SCRAMBLE ARRAY
-  
+
    for(i = 0; i < num; i++){
 		int rand1 = rand() % num;
 		int rand2 = rand() % num;
@@ -113,11 +113,11 @@ int main(int argc, char* argv[]){
 
     //SEARCH USING PROCESSES/THREADS
     int randomTarget = rand() % num;
-	
+
 	//START TIMING
 	struct timeval startTime, endTime;
 	float runTime = 0;
-		
+
 	gettimeofday(&startTime,NULL);
 	int x;
 	x = search(array, randomTarget, num, 5);
@@ -131,15 +131,15 @@ int main(int argc, char* argv[]){
    ///////////////////////////
    int actual = check(array, randomTarget, num);
    printf("Actually at %d\n", actual);
-	*/	
+	*/
 
     //EVERY TEST AFTERWARDS DOESN'T NEED TO GENERATE THE WHOLE LIST FROM SCRATCH, JUST SHUFFLE
-	/*  
- 	int found = 5; 
+	/*
+ 	int found = 5;
    array = shuffle(array, found);
    gettimeofday(&startTime,NULL);
 	x = search(array, randomTarget, num, 10);
-	gettimeofday(&endTime, NULL);   
+	gettimeofday(&endTime, NULL);
 	*	free(array);
 	*/
    return(0);
