@@ -17,7 +17,7 @@ writeTimeToFile(FILE *fp){
 	int counter = 0;
 	int i,ind,j;
 	//create an array from size 1 to 375,000
-	for (i = 1; i <=2000; i++){
+	for (i = 50; i <=2000; i+=50){
 		int* array = malloc(i * sizeof(int));
 		//make the array
 		for(ind = 0; ind < i; ind++)
@@ -36,19 +36,19 @@ writeTimeToFile(FILE *fp){
 		int randomTarget = rand() % i;
 		
 		//given our array of size i, test using up to 50 threads/processes
-		for (j = ceil((double) i / 250); j <= MAX_WORKERS, j <= i; j++){
+		for (j = ceil((double) i / 250); j <= MAX_WORKERS && j <= i; j++){
 				
 			if (i % MAX_WORKERS != 0) continue;
 			gettimeofday(&startTime,NULL);
 			int x = search(array, randomTarget, i, j);
 			gettimeofday(&endTime,NULL);
-			float runTime = endTime.tv_usec - startTime.tv_usec + endTime.tv_sec - startTime.tv_sec;
+			float runTime = (float) endTime.tv_usec - startTime.tv_usec + endTime.tv_sec - startTime.tv_sec;
 			char* status;
 			if (x != -1) status = "found";
 			else status = "not found";
 			//write results to the file
 			fprintf(fp, "%d\t%d\t%f\t%s\n", i,j,runTime,status); 		
-			//printf("iteration: %d\n",counter++);
+			printf("arary size and thread num: %d and %d\n",i,j);
 		}
 		free(array);
 
