@@ -34,7 +34,8 @@ void* ThreadSearch(void* arg){
 
     //printf("ind is: %d\n", ptr[2]);
     int* ans = (int*) ptr[2];
-    free(arg);
+    //free(arg);
+    free(ptr);
     //pthread_exit(&arg);
     pthread_exit((void*) ans);
 }
@@ -75,9 +76,11 @@ int divideUpWork(int* arr, int targ, int num, int numElem){
         meta[0] = i; meta[1] = i + piece; meta[2] = -1;
       //printf("arg start at: %d\n", meta[0]);
         int status = pthread_create(&handler, NULL, ThreadSearch, (void*)meta);
-        if(status != 0){
-            printf("error occurred while threading\n");
+        
+	if(status != 0){
+            printf("error occurred while threading\n"); continue;
         }
+	
         thread[k] = handler; 
         //printf("handler: %d\n", handler);
         threadCount++;
@@ -91,7 +94,7 @@ int divideUpWork(int* arr, int targ, int num, int numElem){
         pthread_join(thread[i], (void*)&ans);
         //printf("joined thread: %d\n", i);
         //printf("x is: %d\n", ans);
-
+	
         if(ans != -1){
             found = ans;
             break;

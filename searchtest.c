@@ -5,19 +5,18 @@
 #include <sys/time.h>
 
 
-int MAX_ARR_SIZE = 500;
-int MAX_WORKERS = 2;
+int MAX_WORKERS = 50;
 
 
-writeTimeToFile(FILE *fp){
-
+writeTimeToFile(int min, int max){
+	int MAX_ARR_SIZE = max;
 	struct timeval startTime, endTime;
-
+	//FILE *fp = fopen(filename,"w");
 
 	int counter = 0;
 	int i,ind,j;
-	//create an array from size 1 to 375,000
-	for (i = 1; i <=MAX_ARR_SIZE; i++){
+	//create an array of diff sizes
+	for (i = min; i <=MAX_ARR_SIZE; i+=100){
 		int* array = malloc(i * sizeof(int));
 		//make the array
 		for(ind = 0; ind < i; ind++)
@@ -42,20 +41,23 @@ writeTimeToFile(FILE *fp){
 			gettimeofday(&startTime,NULL);
 			int x = search(array, randomTarget, i, j);
 			gettimeofday(&endTime,NULL);
-			float runTime = (float) endTime.tv_usec - startTime.tv_usec + endTime.tv_sec - startTime.tv_sec;
-			char* status;
-			if (x != -1) status = "found";
-			else status = "not found";
+			float runTime = (float) endTime.tv_usec - startTime.tv_usec + 1000000*(endTime.tv_sec - startTime.tv_sec);
+			//fprintf(fp,"%d\t%d\t%f\n", i,j,runTime);
+			printf("%d\t%d\t%f\n", i,j,runTime);			
+			//char* status;
+			//if (x != -1) status = "found";
+			//else status = "not found";
 			//write results to the file
-			fprintf(fp, "%d\t%d\t%f\t%s\n", i,j,runTime,status);
-			printf("%d\t%d\t%f\t%s\n", i,j,runTime,status);
+			
+		
+			
 			//printf("arary size and thread num: %d and %d\n",i,j);
 		}
 
 		free(array);
 
 	}
-	fclose(fp);
+	//fclose(fp);
 }
 
 
@@ -82,8 +84,8 @@ int check(int* arr, int target, int size){
 }
 int main(int argc, char* argv[]){
 
-	FILE *fp = fopen(argv[1],"w");
-	writeTimeToFile(fp);
+	//FILE *fp = fopen(argv[1],"w");
+	writeTimeToFile(atoi(argv[1]), atoi(argv[2]));
 
 
 
