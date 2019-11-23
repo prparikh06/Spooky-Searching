@@ -6,7 +6,10 @@
 #include <stdio.h>
 
 #define search( arr, x, num, numElem ) divideUpWork( arr, x, num, numElem )
+#define mode() returnMode()
 
 int divideUpWork(int* arr, int target, int num, int numElem);
+
+char* returnMode();
 
 #endif

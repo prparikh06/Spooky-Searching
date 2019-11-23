@@ -3,12 +3,52 @@
 #include "multitest.h"
 #include <unistd.h>
 #include <sys/time.h>
+#include <math.h>
+
 
 
 int MAX_WORKERS = 50;
 
+float mean(float times[], int l){
+    float sum, theMean = 0.0;
+    int i;
+    for (i = 0; i < l; i++) sum += times[i];
+	theMean = sum / (float) l;
+	return theMean;
+}
+
+float standardDev(float times[], int l, float mean){
+
+	float var = 0.0, sum = 0.0, standDev = 0.0;
+	int i;
+	for (i = 0; i < l; i++){
+		var += pow((times[i] - mean) , 2);
+	}
+
+	var = var / (float) l;
+	standDev = (float) sqrt(var);
+	return standDev;
+
+}
+
+float* minMax(float times[], int l){
+
+	float min = times[0], max = times[0];
+
+	int i;
+	for (i = 0; i<l;i++){
+		if (times[i] > max) max = times[i];
+		if (times[i] < min) min = times[i];
+	}
+	float results[] = {min,max};
+	return results;
+}
+
+
 
 writeTimeToFile(int min, int max){
+    char* currentMode = mode();
+    printf("%s\n", currentMode);
 	int MAX_ARR_SIZE = max;
 	struct timeval startTime, endTime;
 	//FILE *fp = fopen(filename,"w");
@@ -33,32 +73,54 @@ writeTimeToFile(int min, int max){
 
 		//random target:
 		int randomTarget = rand() % i;
+		int numofWorkers = 0;
+        if(i < 250){
+            if(MAX_WORKERS < i){
+                numofWorkers = MAX_WORKERS - (int)(ceil((double) i / 250)) + 1;
+            }else{
+                numofWorkers = i - (int)(ceil((double) i / 250)) + 1;
+            }
 
+        }else{
+            numofWorkers = MAX_WORKERS - (int)(ceil((double) i / 250)) + 1;
+        }
+
+		float* times = malloc(sizeof(int) * numofWorkers);
+		int k = 0;
+        printf("Testing array size %d, Target:%d\n", i, randomTarget);
 		//given our array of size i, test using up to 50 threads/processes
-		for (j = ceil((double) i / 250); j <= MAX_WORKERS && j <= i; j++){
+		for (j = ceil((double) i / 250); j <= MAX_WORKERS && j <= i; j++, k++){
 
 			//if (i % MAX_WORKERS != 0) continue;
 			gettimeofday(&startTime,NULL);
 			int x = search(array, randomTarget, i, j);
 			gettimeofday(&endTime,NULL);
 			float runTime = (float) endTime.tv_usec - startTime.tv_usec + 1000000*(endTime.tv_sec - startTime.tv_sec);
+			times[k] = runTime;
 			//fprintf(fp,"%d\t%d\t%f\n", i,j,runTime);
-			printf("%d\t%d\t%f\n", i,j,runTime);			
+			printf("Arr Size: %d\tNum of Workers: %d\tRuntime: %f\tIndex found: %d\n", i,j,runTime, x);
 			//char* status;
 			//if (x != -1) status = "found";
 			//else status = "not found";
 			//write results to the file
-			
-		
-			
+
+
+
 			//printf("arary size and thread num: %d and %d\n",i,j);
 		}
-
+		float theMean = mean(times,k);
+		float stdDiv = standardDev(times,k,theMean);
+		float *results = minMax(times,k);;
+        //printf("numofWorkers: %d, times size: %d\n", numofWorkers, k);
+        printf("mean: %f, std: %f, min: %f, max: %f\n", theMean, stdDiv, results[0], results[1]);
+        free(times);
 		free(array);
 
 	}
 	//fclose(fp);
 }
+
+
 
 
 int* shuffle(int* arr, int i){
@@ -83,69 +145,14 @@ int check(int* arr, int target, int size){
 
 }
 int main(int argc, char* argv[]){
-
+    int min = 100;
+    int max = 12500;
+    int workers = 50;
+    printf("Testing array sizes ranging from %d to %d, with max number of workers as %d\n", min, max, workers);
 	//FILE *fp = fopen(argv[1],"w");
-	writeTimeToFile(atoi(argv[1]), atoi(argv[2]));
+	writeTimeToFile(min, max);
 
 
-
-	/*
-	int num = atoi(argv[1]);
-	int numWorkers = -1;
-	if (argv[2] != NULL) numWorkers = atoi(argv[2]);
-
-
-    //FIRST GENERATION OF RANDOM LIST
-    int* array = malloc(num * sizeof(int));
-    int i;
-    for(i = 0; i < num; i++){
-        array[i] = i;
-	//printf("%d ",array[i]);
-    }
-
-  //SCRAMBLE ARRAY
-
-   for(i = 0; i < num; i++){
-		int rand1 = rand() % num;
-		int rand2 = rand() % num;
-		int tmp1 = array[rand1];
-		int tmp2 = array[rand2];
-		array[rand2] = tmp1;
-		array[rand1] = tmp2;
-    }
-
-
-    //SEARCH USING PROCESSES/THREADS
-    int randomTarget = rand() % num;
-
-	//START TIMING
-	struct timeval startTime, endTime;
-	float runTime = 0;
-
-	gettimeofday(&startTime,NULL);
-	int x;
-	x = search(array, randomTarget, num, 5);
-	gettimeofday(&endTime, NULL);
-	runTime = (float) (endTime.tv_usec - startTime.tv_usec + endTime.tv_sec - startTime.tv_sec);
-
-
-
-	/printf("Runtime %f\n", runTime);
-   printf("searching: %d\nFound it at %d\n", randomTarget,x);
-   ///////////////////////////
-   int actual = check(array, randomTarget, num);
-   printf("Actually at %d\n", actual);
-	*/
-
-    //EVERY TEST AFTERWARDS DOESN'T NEED TO GENERATE THE WHOLE LIST FROM SCRATCH, JUST SHUFFLE
-	/*
- 	int found = 5;
-   array = shuffle(array, found);
-   gettimeofday(&startTime,NULL);
-	x = search(array, randomTarget, num, 10);
-	gettimeofday(&endTime, NULL);
-	*	free(array);
-	*/
    return(0);
 
 

@@ -15,6 +15,9 @@ int arraySize;
 
 */
 
+char* returnMode(){
+    return "Multi-threading Mode";
+}
 //Function to search
 void* ThreadSearch(void* arg){
     //printf("target: %d\n", target);
@@ -40,6 +43,7 @@ void* ThreadSearch(void* arg){
     pthread_exit((void*) ans);
 }
 int divideUpWork(int* arr, int targ, int num, int numElem){
+
     mainArray = arr;
     target = targ;
     //printf("target: %d\n", target);
@@ -52,7 +56,7 @@ int divideUpWork(int* arr, int targ, int num, int numElem){
         numThreads = numElem;
 	//printf("ceil(num/numElem) should be: %d\n", ceil(num/numElem));
         piece = ceil((double)num/numElem);
-	
+
     }
     // If array size is less than 250, we just divide it in 4 sections
     else if(numElem == -1 && num < 250){
@@ -62,44 +66,44 @@ int divideUpWork(int* arr, int targ, int num, int numElem){
         piece = 250;
         numThreads = ceil((double)num/250); //need to round up
     }
-	
+
     //printf("size of array: %d\n", num);
-    
+
 
     pthread_t thread[numThreads];
     int k = 0;
     int i;
     for(i = 0; i < num; i+= piece, k++){
         pthread_t handler;
-			
+
         int* meta = (int*)malloc(sizeof(int)*3);
         meta[0] = i; meta[1] = i + piece; meta[2] = -1;
       //printf("arg start at: %d\n", meta[0]);
         int status = pthread_create(&handler, NULL, ThreadSearch, (void*)meta);
-        
+
 	if(status != 0){
             printf("error occurred while threading\n"); continue;
         }
-	
-        thread[k] = handler; 
+
+        thread[k] = handler;
         //printf("handler: %d\n", handler);
         threadCount++;
     }
     //printf("numThreads: %d threadCount: %d\n", numThreads, threadCount);
     int found = -1;
-    
+
     for(i = 0; i < numThreads; i++){
         int ans;
-        
+
         pthread_join(thread[i], (void*)&ans);
         //printf("joined thread: %d\n", i);
         //printf("x is: %d\n", ans);
-	
+
         if(ans != -1){
             found = ans;
             break;
         }
-        
+
     }
 
     return found;

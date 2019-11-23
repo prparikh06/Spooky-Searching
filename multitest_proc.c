@@ -5,8 +5,11 @@
 #include <errno.h>
 #include <math.h>
 
-int divideUpWork(int* arr, int target, int num, int numElem){
+char* returnMode(){
+    return "Multi-process Mode";
+}
 
+int divideUpWork(int* arr, int target, int num, int numElem){
     int piece = 0; // # of nums in each section
     int numProcs = 0; // num of child procs based on piece
     int numChild = 0; // keeps count of number of child
@@ -15,7 +18,7 @@ int divideUpWork(int* arr, int target, int num, int numElem){
     if(numElem != -1){
         numProcs = numElem;
         piece = ceil((double)num/numElem);
-	
+
     }
     // If array size is less than 250, we just divide it in 4 sections
     else if(num < 250){
